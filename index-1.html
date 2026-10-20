@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090d">
+  <title>Для тебя 🖤</title>
+  <style>
+    :root {
+      --bg: #09090d;
+      --panel: rgba(20, 19, 26, .88);
+      --text: #f5f0f2;
+      --muted: #b8adb5;
+      --accent: #d7a3b4;
+      --accent2: #8c5268;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(115, 51, 77, .20), transparent 38%),
+        radial-gradient(ellipse at 85% 80%, rgba(70, 65, 105, .16), transparent 40%),
+        var(--bg);
+      font-family: Georgia, "Times New Roman", serif;
+      display: grid; place-items: center; padding: 24px 16px;
+      overflow-x: hidden;
+    }
+    .stars, .rain { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+    .star {
+      position: absolute; width: 2px; height: 2px; border-radius: 50%;
+      background: #fff; opacity: .25; animation: twinkle 3s infinite ease-in-out;
+    }
+    @keyframes twinkle { 0%,100% {opacity:.12; transform:scale(.8)} 50% {opacity:.8; transform:scale(1.5)} }
+    .drop {
+      position: absolute; top: -20px; width: 1px; height: 35px;
+      background: linear-gradient(transparent, rgba(196, 185, 205, .23));
+      animation: fall linear infinite;
+    }
+    @keyframes fall { to { transform: translateY(110vh); } }
+    .wrap { width: min(100%, 660px); position: relative; z-index: 1; }
+    .card {
+      border: 1px solid rgba(215,163,180,.25);
+      background: var(--panel); backdrop-filter: blur(12px);
+      border-radius: 22px; padding: clamp(25px, 6vw, 48px);
+      box-shadow: 0 24px 90px rgba(0,0,0,.45);
+      text-align: center; animation: rise .8s ease both;
+    }
+    @keyframes rise { from {opacity:0; transform:translateY(16px)} to {opacity:1; transform:translateY(0)} }
+    .symbol { color: var(--accent); font-size: 26px; letter-spacing: 8px; margin-bottom: 14px; }
+    h1 { font-weight: normal; font-size: clamp(28px, 6vw, 42px); margin: 0 0 12px; }
+    .hint { color: var(--muted); line-height: 1.6; font-family: Arial, sans-serif; font-size: 14px; margin: 14px 0 22px; }
+    input {
+      width: 100%; max-width: 360px; padding: 14px 16px; border-radius: 10px;
+      border: 1px solid rgba(215,163,180,.35); background: rgba(0,0,0,.25);
+      color: var(--text); font-size: 16px; outline: none; text-align: center;
+    }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(215,163,180,.10); }
+    button {
+      display: inline-block; margin-top: 16px; padding: 12px 28px;
+      border-radius: 999px; border: 1px solid var(--accent2);
+      background: linear-gradient(135deg, #6f3b50, #382331); color: #fff;
+      font-size: 15px; cursor: pointer; transition: transform .2s, filter .2s;
+    }
+    button:hover { transform: translateY(-2px); filter: brightness(1.15); }
+    .error { min-height: 20px; margin-top: 14px; color: #e9a5b3; font: 13px Arial, sans-serif; }
+    .hidden { display: none !important; }
+    .letter { text-align: left; }
+    .letter .symbol, .letter h1, .letter .subtitle { text-align: center; }
+    .subtitle { color: var(--muted); font: 12px Arial, sans-serif; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; }
+    .message { font-size: clamp(17px, 3.7vw, 20px); line-height: 1.9; white-space: pre-line; color: #eee6ea; }
+    .closing { margin-top: 30px; padding-top: 22px; border-top: 1px solid rgba(215,163,180,.22); text-align: center; color: var(--accent); font-size: 27px; font-style: italic; }
+    .foot { text-align: center; color: rgba(220,210,218,.35); font: 11px Arial, sans-serif; margin-top: 18px; letter-spacing: 1px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+  <div class="rain" id="rain" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" id="gate">
+      <div class="symbol">✦ ♡ ✦</div>
+      <h1>Для тебя</h1>
+      <p class="hint">Введи слово, которое я чаще всего использую.</p>
+      <form id="passwordForm">
+        <input id="password" type="password" placeholder="Пароль" autocomplete="off" aria-label="Пароль">
+        <br>
+        <button type="submit">Открыть</button>
+        <div class="error" id="error" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="card letter hidden" id="letter">
+      <div class="symbol">✦ ♡ ✦</div>
+      <h1>Поздравляю</h1>
+      <div class="subtitle">С днём рождения</div>
+      <div class="message">Хотя мы уже и не так близки и даже не общаемся, эта дата всё равно осталась для меня приятным воспоминанием. Всего того хорошего, чего я желал тебе раньше, я желаю тебе и сейчас. Не буду много говорить. На протяжении многих лет ты оставалась в моих мыслях и в моей жизни единственным по-настоящему близким человеком. Спасибо тебе за это. Всегда улыбайся и оставайся такой же красивой. Я написал эти слова уже довольно давно, но отправить тебе их получилось только сегодня.</div>
+      <div class="closing">Береги себя</div>
+    </section>
+    <div class="foot">✧</div>
+  </main>
+
+  <script>
+    // Важно: пароль на статической странице можно обнаружить в исходном коде.
+    // Для настоящей защиты нужна серверная проверка.
+    const correctPassword = "Сладкая";
+    const form = document.getElementById("passwordForm");
+    const input = document.getElementById("password");
+    const error = document.getElementById("error");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (input.value.trim() === correctPassword) {
+        document.getElementById("gate").classList.add("hidden");
+        const letter = document.getElementById("letter");
+        letter.classList.remove("hidden");
+        letter.style.animation = "rise .9s ease both";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        error.textContent = "Неверное слово. Попробуй ещё раз.";
+        input.value = "";
+        input.focus();
+      }
+    });
+
+    // Decorative stars and soft rain, no external images or libraries.
+    const stars = document.getElementById("stars");
+    for (let i = 0; i < 65; i++) {
+      const s = document.createElement("span");
+      s.className = "star";
+      s.style.left = Math.random() * 100 + "%";
+      s.style.top = Math.random() * 100 + "%";
+      s.style.animationDelay = (Math.random() * 4) + "s";
+      s.style.animationDuration = (2 + Math.random() * 4) + "s";
+      stars.appendChild(s);
+    }
+    const rain = document.getElementById("rain");
+    for (let i = 0; i < 28; i++) {
+      const d = document.createElement("span");
+      d.className = "drop";
+      d.style.left = Math.random() * 100 + "%";
+      d.style.animationDuration = (3 + Math.random() * 5) + "s";
+      d.style.animationDelay = (-Math.random() * 8) + "s";
+      rain.appendChild(d);
+    }
+  </script>
+</body>
+</html>
